@@ -324,6 +324,12 @@ Linter for Fortran is provided by the `Modern Fortran` extension and it relies o
 
 3. Fortran > Fortls > Preprocessor: If you have any preprocessor files, then you need to set this one as well. If you do not know what is a preprocessor file, then chances are you do not need this.
 
+### Compilation with a Makefile
+
+It's practically impossible to compile a large Fortran project with dozens of source files using command line. Writing a [Makefile](https://www.gnu.org/software/make/manual/html_node/Introduction.html) and then compile the project using [GNU make](https://www.gnu.org/software/make/) simplifies the process. Each time you want to (re)compile your project, you just need to run the `make` command followed by the target name in your terminal.
+
+In this tutorial, I have also provided a simple [Makefile](Makefile) that you can use to compile the two toy examples. To compile the file `/src/Fortran/toy.f90`, simply type `make a.out` in your terminal. To compile the MPI toy example, type `make b.out`. You would need to have the Intel compilers installed (details given [above](#prerequisite-for-this-tutorial)).
+
 ### Debugging sequential or shared-memory (non-MPI) parallel Fortran codes
 
 Debugging sequential or shared-memory parallel Fortran codes is easy. After compilation and having set up the `launch.json` file ([see here](#debugger-in-vscode)), all you need to do is follow the standard procedure as detailed in the official documentation given [here](https://code.visualstudio.com/docs/editor/debugging).

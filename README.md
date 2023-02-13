@@ -1,5 +1,31 @@
 # VSCode_tutorial
+
 A tutorial on how to use VSCode
+
+## Prerequisite for this tutorial
+
+There are some tools you need to install before going through this tutorial. Of course, you have to have VSCode installed on your computer at least. Below, I list some other tools that I can think of.
+
+- Windows Subsystem for Linux
+    For Windows users, I strongly recommend installing [Windows Subsystem for Linux](https://learn.microsoft.com/en-us/windows/wsl/install). This tutorial assumes you are working with a Linux OS. Everything probably still apply if you are working on a Mac, but I have no experience of installing all necessary tools on a Windows machine and make it work.
+
+- Python interpreter
+    You can use the interpreter that comes with your system, or you can install [Anaconda](https://www.anaconda.com/). I use the interpreter provided by Intel (more below).
+
+- Fortran Compilers (and `make`)
+
+    If your research involves coding in Fortran, then you need to have a compiler installed to compile Fortran codes.
+
+  - Intel compilers
+    Please follow the instructions [here](https://www.intel.com/content/www/us/en/developer/tools/oneapi/base-toolkit-download.html?operatingsystem=linux&distributions=aptpackagemanager) to install the compilers on your computer. Necessary toolkits include:
+
+    1. intel-basekit
+    2. intel-hpckit
+    3. intel-aikit (includes Python interpreter)
+
+  - GNU compilers (gcc, gfortran)
+
+    On Ubuntu, the GNU tools can be installed via `sudo apt install gfortran build-essential`. `Make` is included in the `build-essential` packages.
 
 ## VSCode basics
 
@@ -391,3 +417,9 @@ VSCode integrates source control functions within the editor which means you pro
 If you are still working with SVN, then there is an extension named [SVN](https://marketplace.visualstudio.com/items?itemName=johnstoncode.svn-scm) and you can use it to track changes in the SVN repository.
 
 If you are just starting to use version control, I recommend using Git.
+
+## Remote development with VSCode
+
+This is probably one of the most important reasonse why I switched from Emacs to VSCode. It's just much smoother to develop remotely with VSCode compared with Emacs. You don't really feel much difference between local and remote developments anymore. You can remotely develop your code on another machine via SSH or develop using the Windows side VSCode on your [Windows Subsystem for Linux](https://learn.microsoft.com/en-us/windows/wsl/install).
+
+Please refer to the [official documentation](https://code.visualstudio.com/docs/remote/remote-overview) to learn how remote development works.

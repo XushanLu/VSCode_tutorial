@@ -103,7 +103,7 @@ Whether you are a Vim veteran or a newcomer looking to learn its powerful comman
 
 #### [GitHub Copilot](https://marketplace.visualstudio.com/items?itemName=GitHub.copilot)
 
-I like this extension and I am actually pay for it. It prompts me to write way more comments in my code now because it simply would not work without somehow detailed comments. It's way smarter than what I expect most of the times although it does give me laughable suggestions all the time. You just need to learn how you can make it work better for your needs.
+I like this extension and I am actually paying for it. It prompts me to write way more comments in my code now because it simply would not work without somehow detailed comments. It's way smarter than what I expect most of the times although it does give me laughable suggestions all the time. You just need to learn how you can make it work better for your needs.
 
 > Introduction from ChatGPT (The tech behind this extension is actually developed by OpenAI, the company which has also developed ChatGPT):
 
@@ -167,7 +167,7 @@ Here's a brief introduction on how to work with terminals in VSCode:
 
 By using terminals in VSCode, you can save time and improve your workflow by running commands and scripts directly from the editor.
 
-## <a name="debugger"></a>Debugger in VSCode
+## Debugger in VSCode
 
 Debugging is an essential part of software development and allows developers to find and fix errors in their code. Visual Studio Code (VSCode) is a popular code editor that comes with a built-in debugger to make debugging a breeze.
 
@@ -200,13 +200,13 @@ Below I have provided three examples on how to debug Python, non-MPI Fortran, an
             "justMyCode": false,
         },
         {
-            "name": "Total",
+            "name": "toy",
             "type": "cppdbg",
             "request": "launch",
-            "program": "/home/xsl/work/svn/peter/trunk/exe/debug/intel/EM3D",
-            "args": ["emdata.inp"], // Possible input args for a.out
+            "program": "${workspaceFolder}/build/a.out",
+            "args": [], // Possible input args for a.out
             "stopAtEntry": false,
-            "cwd": "/home/xsl/writing/Papers/Total_modeling/layered_with_discs/input",
+            "cwd": "${workspaceFolder}/build",
             "environment": [],
             "externalConsole": false,
             "MIMode": "gdb",
@@ -221,14 +221,14 @@ Below I have provided three examples on how to debug Python, non-MPI Fortran, an
             ]
         },
         {
-            "name": "EM3D_MPI",
+            "name": "toy_MPI",
             "type": "cppdbg",
             "request": "attach",
             "processID": "${command:pickProcess}",
-            "program": "/home/xsl/work/svn/peter/trunk/exe/debug_MPI/intel/EM3D",
-            "args": ["emdata.inp"], // Possible input args for a.out
+            "program": "${workspaceFolder}/build/b.out",
+            "args": [], // Possible input args for a.out
             "stopAtEntry": false,
-            "cwd": "/home/xsl/writing/Papers/Perfect_conductors/Ovoid_tetgen/m1_ramp_off/m1/input/",
+            "cwd": "${workspaceFolder}/build",
             "environment": [],
             "externalConsole": false,
             "MIMode": "gdb",

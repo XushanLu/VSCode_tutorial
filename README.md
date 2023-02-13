@@ -308,7 +308,7 @@ Each VSCode window can only handle a single process so that you may need to open
 
 [Here](https://iamsorush.com/posts/debug-mpi-vs-code/) is a good tutorial on how to debug MPI codes using VSCode (using C++ as an example). All we need to pay attention to is how to exit the sleep function which I have provided a Fortran version in the file `toy_mpi.f90` in the `src` directory.
 
-```{fortran, attr.source='.numberLines'}
+```fortran {.line-numbers}
 SUBROUTINE MPI_debug_vscode(myid)
 
     !! When debugging with VSCode, you need to manually change the value of the variable ii from 

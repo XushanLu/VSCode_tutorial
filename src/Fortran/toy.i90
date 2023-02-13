@@ -1,4 +1,4 @@
-# 1 "/home/xsl/Drive/System_coding/Github/VSCode_tutorial/src/Fortran/toy.f90"
+# 1 "/home/xsl/Github/VSCode_tutorial/src/Fortran/toy.f90"
 program matrix_multiplication
 
     integer, parameter :: N = 3

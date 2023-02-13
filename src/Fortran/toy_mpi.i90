@@ -1,4 +1,4 @@
-# 1 "/home/xsl/Drive/System_coding/Github/VSCode_tutorial/src/Fortran/toy_mpi.f90"
+# 1 "/home/xsl/Github/VSCode_tutorial/src/Fortran/toy_mpi.f90"
 program mpi_sum
     use mpi
     implicit none

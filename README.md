@@ -300,4 +300,38 @@ Linter for Fortran is provided by the `Modern Fortran` extension and it relies o
 
 Debugging sequential or shared-memory parallel Fortran codes is easy. After compilation and having set up the `launch.json` file ([see here](#debugger-in-vscode)), all you need to do is follow the standard procedure as detailed in the official documentation given [here](https://code.visualstudio.com/docs/editor/debugging).
 
-#### Debugging distributed-memory (MPI) Fortran codes
+#### Debugging distributed-memory (MPI) parallel Fortran codes
+
+Debugging distributed-memory parallel codes in Fortran is a bit more complex. We need to run the MPI program first in terminal and then attach the debugger to the processes spawned by the MPI program. Please have a look at this [page (item 6)](https://www.open-mpi.org/faq/?category=debugging) from OpenMPI for a detailed explanation why you would need to do this.
+
+Each VSCode window can only handle a single process so that you may need to open multiple VSCode windows. You cannot open the same workspace twice (VSCode would point you to the already opened window). I would simply open a new window and then add the folders to the workspace that won't be saved. Also, try to limit the number of MPI processes you use to launch your MPI program. Sometimes you would need to control how the program runs in each process. If you use too many processes then you would need to open many VSCode windows!
+
+[Here](https://iamsorush.com/posts/debug-mpi-vs-code/) is a good tutorial on how to debug MPI codes using VSCode (using C++ as an example). All we need to pay attention to is how to exit the sleep function which I have provided a Fortran version in the file `toy_mpi.f90` in the `src` directory.
+
+```{fortran, attr.source='.numberLines'}
+SUBROUTINE MPI_debug_vscode(myid)
+
+    !! When debugging with VSCode, you need to manually change the value of the variable ii from 
+    !! 0 to 1 in order to continue running the program
+    !! We assume that MPI_init has been called
+
+    INTEGER, INTENT(IN) :: myid
+    INTEGER :: ii, ierr
+
+    PRINT*, 'RANK: ', myid
+
+    ii = 0
+    IF (myid == 0)THEN
+        DO WHILE (ii /= 1)
+        ! We only execute this on the master process so that we do not need to fire up
+        ! vscode instances for all processes to step out the loop
+        CALL fortran_sleep(3)
+        END DO
+    END IF
+    ! A barrier is required so that all processes will stay at this point while the 
+    ! master process is being attached (or any other slave processes are being 
+    ! attached when needed)
+    CALL MPI_Barrier(MPI_COMM_WORLD, ierr)
+
+END SUBROUTINE MPI_debug_vscode
+```

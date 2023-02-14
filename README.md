@@ -262,6 +262,8 @@ Below I have provided three examples on how to debug Python, non-MPI Fortran, an
 
     Click `...` at the end of the toolbar and select `Export` and save it as `Python Script`.
 
+- You can directly debug the Jupyter cells by clicking the `˅` button right next to the `▷` button at the top-left conner of a code cell.
+
 ### Normal Python scripts
 
 - You can certainly write *.py files using VSCode.
@@ -275,6 +277,7 @@ Below I have provided three examples on how to debug Python, non-MPI Fortran, an
 - Jupyter integration (e.g., showing variable names)
 
 - Debugger
+  - You can use the [Run and Debug](https://code.visualstudio.com/docs/editor/debugging#_run-and-debug-view) from the [Activity Bar](https://code.visualstudio.com/docs/getstarted/userinterface), or you can directly access the debugger from the tool bar located at the very end of the tab titles within the opened [Editor Group](https://code.visualstudio.com/docs/getstarted/userinterface#_editor-groups) (click the `˅` button besides `▷`).
 
 ## Developing Fortran codes
 
@@ -418,9 +421,9 @@ There are several popular version control systems available, including Git, Merc
 
 > In conclusion, version control is an essential tool for researchers, as it helps them to collaborate, track changes, reproduce results, backup their work, and demonstrate accountability.
 
-### How to use version control in VSCode.
+### How to use version control in VSCode
 
-VSCode integrates source control functions within the editor which means you probably do not even need to install any extension for this to work. It is designed to work with Git but it can also provides some basic supports to SVN. Please have a look at this [webpage](https://code.visualstudio.com/docs/sourcecontrol/overview) for tutorials on how to use the version control tools in VSCode. 
+VSCode integrates source control functions within the editor which means you probably do not even need to install any extension for this to work. It is designed to work with Git but it can also provides some basic supports to SVN. Please have a look at this [webpage](https://code.visualstudio.com/docs/sourcecontrol/overview) for tutorials on how to use the version control tools in VSCode.
 
 If you are still working with SVN, then there is an extension named [SVN](https://marketplace.visualstudio.com/items?itemName=johnstoncode.svn-scm) and you can use it to track changes in the SVN repository.
 
@@ -428,6 +431,6 @@ If you are just starting to use version control, I recommend using Git.
 
 ## Remote development with VSCode
 
-This is probably one of the most important reasonse why I switched from Emacs to VSCode. It's just much smoother to develop remotely with VSCode compared with Emacs. You don't really feel much difference between local and remote developments anymore. You can remotely develop your code on another machine via SSH or develop using the Windows side VSCode on your [Windows Subsystem for Linux](https://learn.microsoft.com/en-us/windows/wsl/install).
+This is probably one of the most important reasonse why I switched from Emacs to VSCode. It's just much smoother to develop remotely with VSCode compared with Emacs. You don't really feel much difference between local and remote developments anymore. You can remotely develop your code on another machine via SSH or develop on the Windows side VSCode using your [Windows Subsystem for Linux](https://learn.microsoft.com/en-us/windows/wsl/install).
 
 Please refer to the [official documentation](https://code.visualstudio.com/docs/remote/remote-overview) to learn how remote development works.

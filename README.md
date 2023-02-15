@@ -43,7 +43,7 @@ Whether you are a beginner or an experienced developer, VSCode is a powerful too
 
 VSCode is very well documented and you can find the official documentation here: https://code.visualstudio.com/docs.
 
-In this tutorial, I am assuming that you have actually gone through some of the basics in the official documentation website.
+In this tutorial, I am assuming that you have actually gone through some of the basics in the official documentation website. If you don't have enough time, then at least you should have a look at the [Tips and Tricks](https://code.visualstudio.com/docs/getstarted/tips-and-tricks) page which shows off a broad range of fancy stuff VSCode can do.
 
 ### Workspace
 

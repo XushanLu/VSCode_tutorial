@@ -1,6 +1,20 @@
 # VSCode_tutorial
 
-A tutorial on how to use VSCode
+A tutorial on how to use VSCode mainly for research-related coding. This is prepared for my live demo for the department. So, something may be missing here because I will demonstrate during the presentation.
+
+Over the years, I have seen people struggling using very basic tools in their research, not being exposed to other better tools such as VSCode. In the past, I've mainly used Emacs (specifically, [Spacemacs](https://www.spacemacs.org/)) for anything related to text editing (e.g., writing papers, coding for research). In fact, with crazy projects like [Emacs-application-framework](https://github.com/emacs-eaf/emacs-application-framework), you can literally 'live' in Emacs (i.e., getting everything done inside Emacs, no terminals, no PDF viewers, no internet browsers, etc.). But learning Emacs is difficult, and mastering it requires a good knowledge of [Elisp](https://en.wikipedia.org/wiki/Emacs_Lisp), the language behind the Emacs text editor. If you don't know that language well, you cannot really configure your Emacs, except for copying others' configurations online and adjust it bit by bit from trial-and-error. And also there's the [Vim](https://www.vim.org/) editor which I actually don't know much about except for it's keybindings (as I use it with, strangely, Emacs, to avoid the terrible [Emacs Pinky](http://xahlee.info/emacs/emacs/emacs_pinky.html) problem). If you actually clicked the links I gave above, you will realize one thing: the websites all seem to be from last century. You are not wrong! Most of the people who are still using these editors learned how to use a computer in the last century. And they spent too much time waging [editor wars](https://en.wikipedia.org/wiki/Editor_war) on each other so they don't have much time to make their website up to date in terms of how they look.
+
+I started coding in my undergrad times (more than 10 years ago!) using Intel Visual Fortran and Microsoft's [Visual Studio](https://visualstudio.microsoft.com/). I quickly stopped using it once I started my master's program and switched from Windows to Linux (I discovered Emacs!). At the time, none of the compiler nor the (integrated development environment) IDE was free, and they are very heavyweight. But one thing I did find missing after the switch was the powerful debugging experience offered by Visual Studio. I had to rely on [print debugging](https://en.wikipedia.org/wiki/Debugging#Techniques). I asked ChatGPT whether print debugging is good and here's the answer: 
+
+> Print debugging can be a useful technique for debugging code, particularly for small scripts or when working in environments that do not support more advanced debugging tools. By adding print statements throughout your code, you can print out the value of variables, track the execution flow of your code, and identify where errors occur.
+
+> However, print debugging can be a tedious and time-consuming process, particularly for larger codebases. It can also be difficult to trace errors that occur within loops or conditionals that are nested deeply within your code.
+
+> In general, print debugging can be a good starting point for debugging your code, but it should not be relied upon as the only means of debugging. If you are working on a larger codebase or need to debug more complex issues, you may want to consider using more advanced debugging tools, such as debuggers, profilers, or logging frameworks, which can provide more detailed insights into your code's execution and make it easier to identify and fix errors.
+
+So, it would be wonderful if there are tools that can provide a smooth editing experience and serve as an IDE at the same time. Also, it should not be too difficult to learn as Emacs and Vim. I think VSCode is probably the answer.
+
+Below I provided some information about VSCode and what you can use it to do. I will simply go through all of them during the live demo.
 
 ## Prerequisite for this tutorial
 
@@ -434,3 +448,15 @@ If you are just starting to use version control, I recommend using Git.
 This is probably one of the most important reasonse why I switched from Emacs to VSCode. It's just much smoother to develop remotely with VSCode compared with Emacs. You don't really feel much difference between local and remote developments anymore. You can remotely develop your code on another machine via SSH or develop on the Windows side VSCode using your [Windows Subsystem for Linux](https://learn.microsoft.com/en-us/windows/wsl/install).
 
 Please refer to the [official documentation](https://code.visualstudio.com/docs/remote/remote-overview) to learn how remote development works.
+
+## Can we use AI to code?
+
+### How the GitHub CoPilot extension is speeding up my coding productivity
+
+#### Error check in Fortran codes
+
+#### Writing docstring in Python
+
+#### Comments driven code suggestions
+
+### How the ChatGPT extension can be useful

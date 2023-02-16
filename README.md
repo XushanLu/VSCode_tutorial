@@ -347,6 +347,8 @@ It's practically impossible to compile a large Fortran project with dozens of so
 
 In this tutorial, I have also provided a simple [Makefile](Makefile) that you can use to compile the two toy examples. To compile the file `/src/Fortran/toy.f90`, simply type `make a.out` in your terminal. To compile the MPI toy example, type `make b.out`. You would need to have the Intel compilers installed (details given [above](#prerequisite-for-this-tutorial)).
 
+> Tricks: when running make in terminal, and when you see an error, you can quickly jump to the line caused the compilation error by holding `Ctrl` and then click that filename (with a line number) emitted by the terminal. This is much faster than opening the file and jumping to the offending line manually.
+
 ### Debugging sequential or shared-memory (non-MPI) parallel Fortran codes
 
 Debugging sequential or shared-memory parallel Fortran codes is easy. After compilation and having set up the `launch.json` file ([see here](#debugger-in-vscode)), all you need to do is follow the standard procedure as detailed in the official documentation given [here](https://code.visualstudio.com/docs/editor/debugging).
@@ -454,6 +456,60 @@ Please refer to the [official documentation](https://code.visualstudio.com/docs/
 ### How the GitHub CoPilot extension is speeding up my coding productivity
 
 #### Error check in Fortran codes
+
+#### Automatically generating routines slightly different from previous ones
+
+I am trying to generate [rotation matrices](https://en.wikipedia.org/wiki/Rotation_matrix) and I tried to make things as general as possible so that I try to write three subroutines (or functions in Python) to return a matrix in three directions and multiply them together to give me a general rotation matrix if you need to rotate things in three dimensions.
+
+In Fortran, the rotation along the z-axis can be written as following (I basically just wrote the comments and the variable declaration and actual matrix were all accepted from the AI suggestions):
+
+```fortran
+PURE SUBROUTINE get_rotation_matrix_z(angle, mat)
+
+    !! Return the rotation matrix for rotation around the z-axis. The positive 
+    !! angle is counter clockwise when observing from the positive z-axis to the
+    !! origin. This angle is simply the yaw angle in the aircraft coordinate. 
+    !! See https://en.wikipedia.org/wiki/Rotation_matrix and 
+    !! https://en.wikipedia.org/wiki/Aircraft_principal_axesfor more details.
+
+    !! The angle in radians
+    REAL(REAL_KIND), INTENT(IN) :: angle
+    !! The rotation matrxi. Dimension (3, 3)
+    REAL(REAL_KIND), INTENT(OUT) :: mat(3, 3)
+
+    mat = reshape([COS(angle), SIN(angle), 0.0_REAL_KIND, &
+                    -SIN(angle), COS(angle), 0.0_REAL_KIND, &
+                    0.0_REAL_KIND, 0.0_REAL_KIND, 1.0_REAL_KIND], [3, 3])
+
+END SUBROUTINE get_rotation_matrix_z
+```
+
+> If you compare the matrix with the one from the Wikipedia page, you will see that it fully understand how the `reshape` intrinsic function works, and it gives the 1D array in the correct order. It also knows that you cannot just use `0.0` because that will give you an error of not having the same type of data inside an array constructor. It also knows that my `REAL` variables are of the `REAL_KIND` type. Lastly, it figures out which axis corresponds to which angle (yaw, pitch, and roll)!
+
+Then, I tried to write another one to return the matrix when you rotate things along the y-axis. The AI bot was able to generate the full subroutine after I finished typing `PURE SUBROUTINE get_rotation_matrix_y()`. I just deliberately paused a second when my cursor is inside the brackets:
+
+```fortran
+PURE SUBROUTINE get_rotation_matrix_y(angle, mat)
+
+    !! Return the rotation matrix for rotation around the y-axis. The positive 
+    !! angle is counter clockwise when observing from the positive y-axis to the
+    !! origin. This angle is simply the pitch angle in the aircraft coordinate. 
+    !! See https://en.wikipedia.org/wiki/Rotation_matrix and 
+    !! https://en.wikipedia.org/wiki/Aircraft_principal_axesfor more details.
+    
+    !! The angle in radians
+    REAL(REAL_KIND), INTENT(IN) :: angle
+    !! The rotation matrxi. Dimension (3, 3)
+    REAL(REAL_KIND), INTENT(OUT) :: mat(3, 3)
+
+    mat = reshape([COS(angle), 0.0_REAL_KIND, -SIN(angle), &
+                    0.0_REAL_KIND, 1.0_REAL_KIND, 0.0_REAL_KIND, &
+                    SIN(angle), 0.0_REAL_KIND, COS(angle)], [3, 3])
+
+END SUBROUTINE get_rotation_matrix_y
+```
+
+> I have not tested this but I have tested the Python version and this also looks like flawless to my bare eyes! (The pause is critical here! If you type too fast, the bot would not be able to respond. This just shows that it is also important to learn how to make the bot work the best for you.)
 
 #### Writing docstring in Python
 

@@ -2,9 +2,21 @@
 
 A tutorial on how to use VSCode mainly for research-related coding. This is prepared for my live demo for the department. So, something may be missing here because I will demonstrate during the presentation.
 
+## Motivation
+
+### TL, DR
+
+- Expose VSCode to those of you who are only using basic text editors or web-based Jupyter Notebook
+- Show how a took like VSCode can potentially increase productivity
+- Show how to debug your code (Python, Fortran, etc.) using an IDE instead of print debugging
+- Show how version control can be useful for your coding and research in general
+- Show how AI (mostly GitHub CoPilot) can be used to turbo-charge your coding productivity
+
+### A bit more in detail
+
 Over the years, I have seen people struggling using very basic tools in their research, not being exposed to other better tools such as VSCode. In the past, I've mainly used Emacs (specifically, [Spacemacs](https://www.spacemacs.org/)) for anything related to text editing (e.g., writing papers, coding for research). In fact, with crazy projects like [Emacs-application-framework](https://github.com/emacs-eaf/emacs-application-framework), you can literally 'live' in Emacs (i.e., getting everything done inside Emacs, no terminals, no PDF viewers, no internet browsers, etc.). But learning Emacs is difficult, and mastering it requires a good knowledge of [Elisp](https://en.wikipedia.org/wiki/Emacs_Lisp), the language behind the Emacs text editor. If you don't know that language well, you cannot really configure your Emacs, except for copying others' configurations online and adjust it bit by bit from trial-and-error. And also there's the [Vim](https://www.vim.org/) editor which I actually don't know much about except for it's keybindings (as I use it with, strangely, Emacs, to avoid the terrible [Emacs Pinky](http://xahlee.info/emacs/emacs/emacs_pinky.html) problem). If you actually clicked the links I gave above, you will realize one thing: the websites all seem to be from last century. You are not wrong! Most of the people who are still using these editors learned how to use a computer in the last century. And they spent too much time waging [editor wars](https://en.wikipedia.org/wiki/Editor_war) on each other so they don't have much time to make their website up to date in terms of how they look.
 
-I started coding in my undergrad times (more than 10 years ago!) using Intel Visual Fortran and Microsoft's [Visual Studio](https://visualstudio.microsoft.com/). I quickly stopped using it once I started my master's program and switched from Windows to Linux (I discovered Emacs!). At the time, none of the compiler nor the (integrated development environment) IDE was free, and they are very heavyweight. But one thing I did find missing after the switch was the powerful debugging experience offered by Visual Studio. I had to rely on [print debugging](https://en.wikipedia.org/wiki/Debugging#Techniques). I asked ChatGPT whether print debugging is good and here's the answer: 
+I started coding seriously at the very end of my undergrad years (2011-2012) using Intel Visual Fortran and Microsoft's [Visual Studio](https://visualstudio.microsoft.com/). Before that I learned C in the first year of my undergrad and I remember we were using Microsoft's [Visual C++ (version 6.0)](https://en.wikipedia.org/wiki/Microsoft_Visual_C%2B%2B). I quickly stopped using it once I started my master's program and switched from Windows to Linux (I discovered Emacs!). At the time, probably none of the compiler nor the (integrated development environment) IDE was free, and they were very heavyweight. When I started using Emacs, I find it's possible to write my code much faster than what I could do with Visual Studio's default editor. I quickly became used to keyboard-driven editing where you don't actually need to switch between your keyboard and your mouse, which becomes extremely annoying once you are used to keyboard-driven editing (see [here](https://waylonwalker.com/keyboard-driven-vscode/) to find out how far you can go along the keyboard-driven editing even with VSCode). But one thing I did find missing after the switch was the powerful debugging experience offered by Visual Studio. I had to rely on [print debugging](https://en.wikipedia.org/wiki/Debugging#Techniques). I asked ChatGPT whether print debugging is good and here's the answer:
 
 > Print debugging can be a useful technique for debugging code, particularly for small scripts or when working in environments that do not support more advanced debugging tools. By adding print statements throughout your code, you can print out the value of variables, track the execution flow of your code, and identify where errors occur.
 
@@ -457,6 +469,33 @@ Please refer to the [official documentation](https://code.visualstudio.com/docs/
 
 #### Error check in Fortran codes
 
+[Dr. Peter Lelièvre](https://www.esd.mun.ca/~peter/Home.html) has a large collection of Fortran codes that almost everyone of us have used in one way or another. I have been building my EM/DC/IP inversion codes on top of (mainly) his Fortran codes. He's one of the few people who really tried to do [object-oriented programming](https://en.wikipedia.org/wiki/Object-oriented_programming) using Fortran (I was heavily influenced by his code). There is one thing in his Fortran code I find very useful and I still have not found anything even remetely close to it: [error handling](https://en.wikipedia.org/wiki/Exception_handling). Unlike other languages such as Python which has built-in error handling functions, Fortran almost has nothing (well, it just does not have any meaningful standard library at all!). So, Peter coded up a Fortran module (roughly equivalent to a class as in other languages) designated to error handling in Fortran.
+
+For example, when you check a statement and when it returns `.False.`, indicating something went wrong, then you would like to record this error and return all the way back to your main program so that you can terminate the execution of the code to figure out what's going on. Here is an example of how you construct an error object:
+
+```fortran
+! Report an error if the dimension is not 3
+IF (n_dim /= 3) THEN
+    CALL error_construct(error, ERROR_GENERAL, modname, subname, &
+                         'The dimension must be 3');    RETURN
+END IF
+```
+
+The above code constructs an error object which contains information on the type of the error `ERROR_GENERAL`, the names of the module and the subroutine in which the error occurred (used to build the [call stack](https://en.wikipedia.org/wiki/Call_stack)). However, there are lots of typing to do just this, which becomes a problem when you want to make your code really robust and add tons of error checks. But the only things that one error construction is different from another are the `if` statements and the `error message`. This is one of the most typical things that GitHub CoPilot is extremely good at! With just a brief comment (`! Report an error if the dimension is not 3`), all you need to do is typing `IF` and then you just wat for a second until all the necessary codes shows up.
+
+There is another error construction that is slightly different from the one shown above. It is required when an `allocation` failed in Fortran for whatever reason. In this case, you need to supply `ERROR_MEMORY` as the type of the error. The error message can just be the name of the array whose allocation failed:
+
+```fortran
+! Allocate the memory for pt_ele, ln_ele, ln_ele_nodes
+ALLOCATE(pt_ele(3, n_rec*4), stat=ierr)
+IF (ierr /= 0) THEN
+    CALL error_construct(error, ERROR_MEMORY, modname, subname, &
+                         'pt_ele');    RETURN
+END IF
+```
+
+After a few times, the AI bot is smart enough to figure out the difference between a normal error construction and a allocation error construction, and it then gives almost perfect codes for this. It typically does not make mistakes even you switch between the two error construction regularly. The success rate is pretty high. Now, my code has way more error check lines than before!
+
 #### Automatically generating routines slightly different from previous ones
 
 I am trying to generate [rotation matrices](https://en.wikipedia.org/wiki/Rotation_matrix) and I tried to make things as general as possible so that I try to write three subroutines (or functions in Python) to return a matrix in three directions and multiply them together to give me a general rotation matrix if you need to rotate things in three dimensions.
@@ -513,6 +552,203 @@ END SUBROUTINE get_rotation_matrix_y
 
 #### Writing docstring in Python
 
+I hate writing comments, be it Fortran or Python. However, to make the language server features work (e.g., hover to see the function definition at the place where you call it), you have to have proper comments written when you write the function. For Python, you need to write proper [docstring](https://peps.python.org/pep-0257/) which can also be used to automatically generate documentation of your code with tools such as [Sphinx](https://www.sphinx-doc.org/en/master/). I find GitHub CoPilot can be used to speed up the process, especially when you name your variables with [semantic names](https://neonira.github.io/offensiveProgrammingBook_v1.2.2/semantic-names.html). If all you'd like to do is to use variable names like `a1, a2, a3, a11, a22, a33` for things that have actualy meanings such as distances, angles, density, etc., then I'd say there's no chance for the bot to help you write docstring.
+
+This also applies to any other language where you would like to write comments. It won't give you perfect comment lines but it can certainly help. Occasionally, it can be distracting, especially what you are trying to do is so sophisticated and there's no way that the bot can figure out anything based on the variable names, function names, and the context. You might think if it's something that simple even a bot can figure out, there is probably no need to write much comments if any at all. Well, ask yourself to explain that 'simple' code three months later and see how much you still remember.
+
 #### Comments driven code suggestions
 
+As mentioned above, GitHub CoPilot can be used to write comment. At the same time, it can also write codes based on comments. So, you can write some comments (with the help of the bot), then you can wait for the bot to suggest codes for you. I've already showed that the bot is capable of getting simple things done as discussed in the [rotation matrix example](#automatically-generating-routines-slightly-different-from-previous-ones). Once you start using it, you will be surprised by the bot's capabilities in understanding what you want to do. Sometimes, it even figures things out before you have a clear idea what you should really do. I give you an example which probably cannot be reproduced considering the randomness of the process.
+
+```python
+def add_rectangle_manual(gmsh: gmsh, corner, dx, dy):
+    """
+    Manually add a rectangle to the model using the occ factory by adding points
+    lines, and surfaces. The rectangle is defined by the coordinates of the
+    lower left corner of the rectangle, the length of the rectangle in the x-
+    and y-directions. Returns the tags of the added points, lines, curvloops,
+    and surface
+
+    Parameters
+    ----------
+    gmsh: Gmsh object
+        The Gmsh object
+    corner: list of floats
+        The coordinates of the lower left corner of the rectangle
+    dx: float
+        The length of the rectangle in the x-direction
+    dy: float
+        The length of the rectangle in the y-direction
+
+    Returns
+    -------
+    ptags: list of int
+        The tags of the four points of the rectangle
+    ltags: list of int
+        The tags of the four lines of the rectangle
+    stag: list of int (only 1 element)
+        The tag of the surface of the rectangle
+    """
+
+    # Define occ as the factory
+    factory = gmsh.model.occ
+
+    # Calculate the coordinates of the four vertices of the rectangle
+    verts = get_rectangle_coords(corner, dx, dy)
+
+    # Add the four vertices of the rectangle to the model
+    ptags = []
+    for idx in range(4):
+        ptag = factory.addPoint(verts[idx, 0], verts[idx, 1], verts[idx, 2])
+        ptags.append(ptag)
+
+    # Add the four lines of the rectangle to the model
+    ltags = []
+    for i in range(4):
+        p1 = ptags[i]
+        p2 = ptags[(i + 1) % 4]
+        ltag = factory.addLine(p1, p2)
+        ltags.append(ltag)
+
+    # Add the curveloop of the rectangle to the model
+    ctag = factory.addCurveLoop(ltags)
+
+    # Add the surface defined by the curveloop
+    stag = factory.addPlaneSurface([ctag])
+
+    # Synchornize the model
+    factory.synchronize()
+
+    return ptags, ltags, [stag]
+```
+
+The code tries to add a rectangle to the [gmsh object](https://gmsh.info/) by adding points, lines, curve loops, and plane surface. This function just performs one of the many steps required to generate a 3D mesh for my EM modeling code using the Gmsh library. What surprised me at the time when I was writing this was the bot seems to know each function pretty well and it automatically fills in the variables. I guess this is because it was trained on codes that contain those open-source libraries that actually use the Gmsh library. Also, it's clever enough to figure out that I need to use the `mod (%)` operator to get the correct index for `p2` in this line: `p2 = ptags[(i + 1) % 4]`. When it AI-completed the code, I did not even know (or could not remember) that `%` is just the `mod` operator in Python. Of course, I found out it was correct after searching on Google just to verify its answer. Another line that also surprised me was this line: `stag = factory.addPlaneSurface([ctag])`. It knows that the function takes in a list instead of an integer. I did not know although I could figure out using the hover thing to have a quick look at the function. My initial guess was the function must be accepting integers.
+
+This example is particularly interesting in that the bot seems to have a much better understanding of the library than me at the time when I first started working on it. It actually saved me time to look up the definitions of the functions (later I just blindly accept its suggestions) most of the times. Unfortunately, when it comes to really sophisticated circumstances, it can mess up spectacularly. So, eventually, I still spend some good amount of time and become familiar with the Gmsh library. But I still believe it's made the process shorter and much smoother.
+
 ### How the ChatGPT extension can be useful
+
+#### Explain selected codes
+
+I was working with Peter's Fortran code used to figure out the indices of edges of each triangular cell in a given mesh. I came across the following do loop and my brain simply refuses to work as I have not had a break for a while. So, I asked ChatGPT to explain what is this!
+
+```fortran
+! Loop over each cell in ugrid2:
+DO i=1,ncells2
+
+    ! Get the nodes for the current cell in ugrid2:
+!         IF (mapnodes) THEN
+!            CALL ugrid_get_cell_nodes(ugrid2,i,nn,inodes2,error); CALL er1(error,e); IF (e) RETURN
+!            ! Find the nodes in ugrid1 corresponding to those nodes from ugrid2:
+!            inodes1(1:nn) = imap(inodes2(1:nn))
+!         ELSE
+    CALL ugrid_get_cell_nodes(ugrid2,i,nn,inodes1,error); CALL er1(error,e); IF (e) RETURN
+!         END IF
+
+    ! Check for any nodes that could not be mapped from ugrid2 to ugrid1:
+!         IF (ANY(inodes1(1:nn)<=0)) PRINT *, 'NODE(S) COULD NOT BE MAPPED'
+    IF (ANY(inodes1(1:nn)<=0)) CYCLE ! the current cell in ugrid2 can't possibly be in ugrid1
+
+    ! Find cells in ugrid1 containing all the nodes for the current cell in ugrid2:
+    CALL ugrid_find_cells_from_nodes(ugrid1,nn,inodes1,nc,icells,error,allflag_op=allflag); CALL er1(error,e); IF (e) RETURN
+!         IF (nc<=0) PRINT *, 'CELL COULD NOT BE CROSS-MAPPED', nn, inodes1(1:nn)
+    IF (nc<=0) CYCLE
+
+    ! Loop over those cells found:
+    DO j=1,nc
+
+    k = icells(j) ! index of a cell in ugrid1
+    n = cross_membership(k,1) + 1 ! counter for the number of ugrid2 cells assigned to the current ugrid1 cell
+    cross_membership(k,1) = n
+    n = n + 1 ! index in cross_membership array that needs to be altered
+
+    ! Set face edge information:
+    IF (n>SIZE(cross_membership,2)) THEN
+!               CALL ugrid_cell_indices_to_att(ugrid1,error); CALL er1(error,e); IF (e) RETURN
+!               CALL ugrid_write_vtu(ugrid1,'junk1.vtu',.FALSE.,error); CALL er1(error,e); IF (e) RETURN
+!               CALL ugrid_cell_indices_to_att(ugrid2,error); CALL er1(error,e); IF (e) RETURN
+!               CALL ugrid_write_vtu(ugrid2,'junk2.vtu',.FALSE.,error); CALL er1(error,e); IF (e) RETURN
+        CALL error_debug(error,'ugrid_other_sub','ugrid_calc_cross_membership','not enough space in output array', &
+                        (/n,SIZE(cross_membership,2),k,i,cross_membership(k,:)/))
+        RETURN
+    END IF
+    cross_membership(k,n) = i ! i is an index of a ugrid2 cell
+
+    END DO
+
+END DO
+```
+
+Here is the answer:
+
+> This code is looping over each cell in the second grid (ugrid2). It then gets the list of nodes associated with each cell. If the mapping flag is set, it finds the nodes in the first grid (ugrid1) corresponding to the nodes from the second grid. Then it checks if any of the nodes could not be mapped from ugrid2 to ugrid1 and if so, skips the cell. Else, it finds all cells in the first grid containing all the nodes for the current cell in the second grid and assigns the cell in ugrid2 to that cell in ugrid1 by adding it to the output array (cross membership). Finally, the face edge information is set in case there is not enough space in the output array.
+
+I will leave this to Peter to comment on whether the bot got it even close. To me, it's pretty close! So, imagine if you are like me and you are reading someone else's code of which you have no idea. Would you want to ask ChatGPT to explain it for you to get a rough idea? Although it might be wrong, you have to figure it out eventually by yourself anyways!
+
+### Optimize selected code
+
+Again, for the same code, I asked ChatGPT to optimize. Here's what I got (reformatted for a better display):
+
+```fortran
+! You can optimize the code by removing unused variables, consolidating 
+! multiple "IF" statements into one, and using more descriptive variable 
+! names. Below is an example of how to do this:
+! Loop over each cell in ugrid2:
+DO cell_idx = 1,ncells2
+
+  ! Get the nodes for the current cell in ugrid2:
+  CALL ugrid_get_cell_nodes(ugrid2,cell_idx,num_nodes,node_idxs2,error); CALL er1(error,e); IF (e) RETURN
+  
+  ! Find the nodes in ugrid1 corresponding to those nodes from ugrid2:
+  node_idxs1(1:num_nodes) = imap(node_idxs2(1:num_nodes))
+  
+  ! Check for any nodes that could not be mapped from ugrid2 to ugrid1:
+  IF (ANY(node_idxs1(1:num_nodes)<=0)) CYCLE ! the current cell in ugrid2 can't possibly be in ugrid1
+  
+  ! Find cells in ugrid1 containing all the nodes for the current cell in ugrid2:
+  CALL ugrid_find_cells_from_nodes(ugrid1,num_nodes,node_idxs1,num_cells,corr_cell_idxs,&
+                                   error,allflag_op=allflag)
+  CALL er1(error,e); IF (e) RETURN
+  IF (num_cells<=0) CYCLE
+
+  ! Loop over those cells found:
+  DO corr_cell_idx = 1,num_cells
+
+    cross_map_idx = corr_cell_idxs(corr_cell_idx) ! index of a cell in ugrid1
+    num_cells_mapped = cross_membership(cross_map_idx,1) + 1 ! counter for the number of ugrid2 cells assigned to the current ugrid1 cell
+    cross_membership(cross_map_idx,1) = num_cells_mapped
+    cross_idx_to_update = num_cells_mapped + 1 ! index in cross_membership array that needs to be altered
+ 
+    ! Set face edge information:
+    IF (cross_idx_to_update>SIZE(cross_membership,2)) THEN
+      CALL error_debug(error,'ugrid_other_sub','ugrid_calc_cross_membership',&
+                      'not enough space in output array', &
+                      (/num_nodes,SIZE(cross_membership,2),cross_map_idx,cell_idx,cross_membership(cross_map_idx,:)/))
+      RETURN
+    END IF
+    cross_membership(cross_map_idx,cross_idx_to_update) = cell_idx ! cell_idx is an index of a ugrid2 cell
+
+  END DO
+
+END DO
+```
+
+I did not check the correctness of the code. The bot is obviously not happy with how the variables are named and I do think after renaming them, the code becomes a bit easier to understand.
+
+#### Find bugs in selected code
+
+Lot's of times it's just give me suggestions as the code I have tested indeed does not have bugs. You can try it with a buggy code and see what happens.
+
+#### Add comments for selected codes
+
+#### Add tests for selected codes
+
+I still do not understand much about how testing should be done in general!
+
+#### Complet code
+
+Didn't try.
+
+#### Ad-hoc prompt
+
+As a non-native English speaker, I would select a paragraph and ask it to check grammar and rephrase!

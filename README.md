@@ -7,7 +7,7 @@ A tutorial on how to use VSCode mainly for research-related coding. This is prep
 ### TL, DR
 
 - Expose VSCode to those of you who are only using basic text editors or web-based Jupyter Notebook
-- Show how a took like VSCode can potentially increase productivity
+- Show how a tool like VSCode can potentially increase productivity
 - Show how to debug your code (Python, Fortran, etc.) using an IDE instead of print debugging
 - Show how version control can be useful for your coding and research in general
 - Show how AI (mostly GitHub CoPilot) can be used to turbo-charge your coding productivity

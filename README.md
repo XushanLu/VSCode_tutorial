@@ -467,11 +467,11 @@ Please refer to the [official documentation](https://code.visualstudio.com/docs/
 
 ## Can we use AI to code?
 
-### How the GitHub CoPilot extension is speeding up my coding productivity
+### How the [GitHub CoPilot](https://marketplace.visualstudio.com/items?itemName=GitHub.copilot) extension is speeding up my coding productivity
 
 #### Error check in Fortran codes
 
-[Dr. Peter Lelièvre](https://www.esd.mun.ca/~peter/Home.html) has a large collection of Fortran codes that almost everyone of us have used in one way or another. I have been building my EM/DC/IP inversion codes on top of (mainly) his Fortran codes. He's one of the few people who really tried to do [object-oriented programming](https://en.wikipedia.org/wiki/Object-oriented_programming) using Fortran (I was heavily influenced by his code). There is one thing in his Fortran code I find very useful and I still have not found anything even remetely close to it: [error handling](https://en.wikipedia.org/wiki/Exception_handling). Unlike other languages such as Python which has built-in error handling functions, Fortran almost has nothing (well, it just does not have any meaningful standard library at all!). So, Peter coded up a Fortran module (roughly equivalent to a class as in other languages) designated to error handling in Fortran.
+[Dr. Peter Lelièvre](https://www.esd.mun.ca/~peter/Home.html) has a large collection of Fortran codes that almost everyone of us in our research group have used in one way or another. I have been building my EM/DC/IP inversion codes on top of (mainly) his Fortran codes. He's one of the few people who really tried to do [object-oriented programming](https://en.wikipedia.org/wiki/Object-oriented_programming) using Fortran (I was heavily influenced by his code). There is one thing in his Fortran code I find very useful and I still have not found anything even remetely close to it: [error handling](https://en.wikipedia.org/wiki/Exception_handling). Unlike other languages such as Python which has built-in error handling functions, Fortran almost has nothing (well, it just does not have any meaningful standard library at all!). So, Peter coded up a Fortran module (roughly equivalent to a class as in other languages) designated to error handling in Fortran.
 
 For example, when you check a statement and when it returns `.False.`, indicating something went wrong, then you would like to record this error and return all the way back to your main program so that you can terminate the execution of the code to figure out what's going on. Here is an example of how you construct an error object:
 

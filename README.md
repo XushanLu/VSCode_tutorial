@@ -363,6 +363,74 @@ In this tutorial, I have also provided a simple [Makefile](Makefile) that you ca
 
 > Tricks: when running make in terminal, and when you see an error, you can quickly jump to the line caused the compilation error by holding `Ctrl` and then click that filename (with a line number) emitted by the terminal. This is much faster than opening the file and jumping to the offending line manually.
 
+### Using `Tasks` in vscode to automate building (compilation) process with clickable file jumps
+
+The one thing I really miss from Emacs is its compilation buffer which has all errors and warnings nicely highlighted and hyper-linked so that you can simply navigate to the error using all the keybindings as you would use in a normal buffer. Once you reached the errors and warnings, hitting `Enter` would open a new buffer which shows the offending lines of your source code for the error or warning in the middle of the buffer in a window. This is great because this saves you from opening a new terminal outside of the editor and read the error (or warning) information and memorize the line number in your head and then open that file in your own text editor then manually scroll down to that offending line.
+
+I did not find anything very close to what Emacs offers in VSCode and that is really disappointing at the beginning. You can certainly use the built-in [Terminal](#terminals-in-vscode) and run `Make` inside it. It will output all the normal compilation information from the compiler. You can quickly go to the offending line by holding `Ctrl` and simultaneously clicking that file + line number string in the terminal output (sometimes it does not work and this depends on the actual information output by your compiler). There are two problems with this method:
+
+- It does not highlight the errors and warnings and we humans hate that!
+- If you have tons of errors (which happens often) then the terminal always automatially scrolls down to the very end of the errors. What you really want is the very beginning of all errors especially when you are fixing them one by one.
+
+Now, I have discovered a way to make VSCode to compile codes and show me all the errors and warnings in the `PROBLEMS` panel with highlighting and hyper links. You need to define [`Tasks`](https://code.visualstudio.com/docs/editor/tasks) in VSCode to do this. Have a look at the official documentation if you understand more. Here I am posting an example `task.json` file that works for my need. You need to put that file in the `.vscode` folder under you workspace folder (for me it's called `trunk`).
+
+Here is the `task.json` file that I got from asking ChatGPT and the new Bing for about 15 minutes and some trial-and-error experiment:
+
+```json
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "em3di",
+            "type": "shell",
+            "command": "make",
+            "args": [
+                "-j",
+                "em3di"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}", 
+                "env": {
+                    "PATH": "/opt/intel/oneapi/compiler/2023.0.0/linux/bin/intel64:${env:PATH}"
+                }
+            },
+            "problemMatcher": {
+                "owner": "fortran",
+                "fileLocation": ["relative", "${workspaceFolder}"],
+                // "pattern": {
+                //     "regexp": "^(.*\\((\\d+)\\)): (error|warning) #\\d+: (.*)$",
+                //     "file": 1,
+                //     "line": 2,
+                //     "severity": 3,
+                //     "message": 4
+                // }
+                "pattern": {
+                    "regexp": "^([^\\(\\)]+)\\((\\d+)\\): (error|warning) #(\\d+): (.*)$",
+                    "file": 1,
+                    "line": 2,
+                    "severity": 3,
+                    "code": 4,
+                    "message": 5
+                    }
+            },
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "presentation": {
+                "reveal": "always",
+                "revealProblems": "always",
+                "panel": "shared"
+            }
+        }
+    ]
+}
+```
+
+To my understanding, the important piece is the regular expression part that I know almost nothing about (I only have a very basic understanding of them). There are predefined ones provided by certain extensions (e.g., you can use `$gcc` if you are using the GCC compiler) but because I am using Intel compilers, I have to define one of my own (the output information of different compilers are different).
+
+Now, you can simply open the `Command Pallette` and type `Run Tasks` which will show your own defined task at the very top. You can either press `Enter` or click your task to compile your code. You can also define hot keys to compile your code more quickly (see official documentation for that). You should be able to see all your compilation errors and warnings in the `PROBLEMS` panel now. You can read the error information to understand what is the problem and then click the file to open it in one of the editor panels. How wonderful is that! I guess I do not need to open Emacs anymore.
+
 ### Debugging sequential or shared-memory (non-MPI) parallel Fortran codes
 
 Debugging sequential or shared-memory parallel Fortran codes is easy. After compilation and having set up the `launch.json` file ([see here](#debugger-in-vscode)), all you need to do is follow the standard procedure as detailed in the official documentation given [here](https://code.visualstudio.com/docs/editor/debugging).

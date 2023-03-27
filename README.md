@@ -471,7 +471,7 @@ To my understanding, the important piece in the above `json` file is the regular
 
 Now, you can simply open the `Command Pallette` and type `Run Tasks` which will show your own defined task at the very top. You can either press `Enter` or click your task to compile your code. You can also use `Ctrl + Shift + B` keys to run the default `build` task which happens to be the one defined in the above `json` file (for me at least). You can also define your own hot keys to compile your code. You should be able to see all your compilation errors and warnings in the `PROBLEMS` panel now. You can read the error information to understand what is the problem and then click the file to open it in one of the editor panels. How wonderful is that! I guess I do not need to open Emacs anymore.
 
-<div class="tip">
+<div style=" background-color: #f2f2f2; border-left: 6px solid #4CAF50; margin: 20px 0; padding: 15px;">
   
 #### Tip
 

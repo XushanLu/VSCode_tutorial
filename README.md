@@ -385,34 +385,74 @@ Here is the `task.json` file that I got from asking ChatGPT and the new Bing for
             "type": "shell",
             "command": "make",
             "args": [
-                "-j",
+                // "-j",
                 "em3di"
             ],
             "options": {
-                "cwd": "${workspaceFolder}", 
+                "cwd": "${workspaceFolder}",
                 "env": {
-                    "PATH": "/opt/intel/oneapi/compiler/2023.0.0/linux/bin/intel64:${env:PATH}"
+                    "PATH": "/opt/intel/oneapi/compiler/2023.0.0/linux/bin/intel64:${env:PATH}",
+                    "LD_LIBRARY_PATH": "/opt/intel/oneapi/compiler/2023.0.0/linux/compiler/lib/intel64_lin:/opt/intel/oneapi/mkl/latest/lib/intel64:${env:LD_LIBRARY_PATH}"
                 }
             },
-            "problemMatcher": {
-                "owner": "fortran",
-                "fileLocation": ["relative", "${workspaceFolder}"],
-                // "pattern": {
-                //     "regexp": "^(.*\\((\\d+)\\)): (error|warning) #\\d+: (.*)$",
-                //     "file": 1,
-                //     "line": 2,
-                //     "severity": 3,
-                //     "message": 4
-                // }
-                "pattern": {
-                    "regexp": "^([^\\(\\)]+)\\((\\d+)\\): (error|warning) #(\\d+): (.*)$",
-                    "file": 1,
-                    "line": 2,
-                    "severity": 3,
-                    "code": 4,
-                    "message": 5
+            "problemMatcher": [
+                {
+                    "owner": "Build",
+                    "fileLocation": [
+                        "relative",
+                        "${workspaceFolder}"
+                    ],
+                    // "pattern": {
+                    //     "regexp": "^(.*\\((\\d+)\\)): (error|warning) #\\d+: (.*)$",
+                    //     "file": 1,
+                    //     "line": 2,
+                    //     "severity": 3,
+                    //     "message": 4
+                    // }
+                    "pattern": {
+                        "regexp": "^([^\\(\\)]+)\\((\\d+)\\): (error|warning) #(\\d+): (.*)$",
+                        "file": 1,
+                        "line": 2,
+                        "severity": 3,
+                        "code": 4,
+                        "message": 5
                     }
-            },
+                },
+                {
+                    "owner": "Build",
+                    "pattern": {
+                        "regexp": "^.*trunk\\/([^:]+):(\\d+): (undefined reference to [`'](.*?)')",
+                        "file": 1,
+                        "line": 2,
+                        "message": 3
+                    }
+                },
+                {
+                    "owner": "Build",
+                    "severity": "warning",
+                    "fileLocation": [
+                        "relative",
+                        "${workspaceFolder}"
+                    ],
+                    "pattern": {
+                        "regexp": "^(.*)\\((\\d+)\\):\\s+remark\\s+#(\\d+):\\s+(This\\s+variable\\s+has\\s+not\\s+been\\s+used.)\\s+\\[(.*)\\]",
+                        "file": 1,
+                        "line": 2,
+                        "code": 3,
+                        "message": {"0": 4, "1": " [", "2": 5, "3": "]"}
+                        }
+                }
+                {
+                    "owner": "Build",
+                    "fileLocation": ["relative", "${workspaceFolder}"],
+                    "pattern": {
+                    "regexp": "^(.*)(\\((\\d+)\\)):\\s+catastrophic\\s+error:\\s+(\\*\\*Internal\\s+compiler\\s+error:\\s+internal\\s+abort\\*\\*\\s+Please\\s+report\\s+this\\s+error\\s+along\\s+with\\s+the\\s+circumstances\\s+in\\s+which\\s+it\\s+occurred\\s+in\\s+a\\s+Software\\s+Problem\\s+Report.)",
+                    "file": 1,
+                    "line": 3,
+                    "message": 4
+                    }
+                },
+            ],
             "group": {
                 "kind": "build",
                 "isDefault": true
@@ -430,6 +470,14 @@ Here is the `task.json` file that I got from asking ChatGPT and the new Bing for
 To my understanding, the important piece in the above `json` file is the regular expression (entirely relying on the GPT bot here). There are predefined ones provided by certain extensions (e.g., you can use `$gcc` if you are using the GCC compiler) but because I am using Intel compilers, I have to define one of my own (the output information of different compilers are different).
 
 Now, you can simply open the `Command Pallette` and type `Run Tasks` which will show your own defined task at the very top. You can either press `Enter` or click your task to compile your code. You can also use `Ctrl + Shift + B` keys to run the default `build` task which happens to be the one defined in the above `json` file (for me at least). You can also define your own hot keys to compile your code. You should be able to see all your compilation errors and warnings in the `PROBLEMS` panel now. You can read the error information to understand what is the problem and then click the file to open it in one of the editor panels. How wonderful is that! I guess I do not need to open Emacs anymore.
+
+<div class="tip">
+  
+#### Tip
+
+You can single out all the errors and warnings coming from your `Build` task by typing `Build` in the filter box inside the `Problem` tab.
+
+</div>
 
 ### Debugging sequential or shared-memory (non-MPI) parallel Fortran codes
 

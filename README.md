@@ -224,10 +224,10 @@ Below I have provided three examples on how to debug Python, non-MPI Fortran, an
             "name": "Python: Current File",
             "type": "python",
             "request": "launch",
-            "cwd": "${workspaceFolder}/src/Python",
             "program": "${file}",
+            "cwd": "${fileDirname}",
             "console": "integratedTerminal",
-            "justMyCode": false,
+            "justMyCode": false
         },
         {
             "name": "toy",
